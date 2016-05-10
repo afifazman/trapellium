@@ -1,8 +1,5 @@
 <?php
-
-session_start();
-
-include('connection/config.php');
+include 'connection/config.php';
 
 // Define $username and $password
 $username=$_POST['username']; 
@@ -12,20 +9,17 @@ $password=$_POST['password'];
 $username = stripslashes($username);
 $password = stripslashes($password);
 $username = mysql_real_escape_string($username); 
-$password = mysql_real_escape_string($password); 
+$password = md5(mysql_real_escape_string($password));
 
 //Check username and password from database
-$sql="SELECT * FROM login WHERE username='$username' and password='$password'";
+echo $sql="SELECT * FROM login WHERE username='$username' and password='$password' limit 1";
 
 $result=mysqli_query($db,$sql);
 
 $row=mysqli_fetch_array($result);
 
-$NRIC = $row['NRIC'];
-
-$_SESSION['NRIC'] = $NRIC;
-
-//echo $_SESSION['studentID'];
+$_SESSION['nric'] = $row['NRIC'];
+$_SESSION['type'] = 'user';
 
 
 //If username and password exist in our database then create a session. //Otherwise echo error.
